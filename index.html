@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"
+  />
+  <meta name="theme-color" content="#050508" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Grove — iPad</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <!--
+    GitHub Pages: 저장소 Settings → Pages → Build and deployment
+    Source: Deploy from a branch → Branch: main, Folder: / (root)
+    이렇게 두면 main에 push할 때마다 사이트가 갱신됩니다.
+  -->
+</head>
+<body>
+  <div class="app-root" id="app">
+    <div id="mySwipe" class="swipe">
+      <div class="swipe-wrap">
+        <div>
+          <img class="slide-img" src="images/slide-1.svg" alt="" draggable="false" />
+        </div>
+        <div>
+          <img class="slide-img" src="images/slide-2.svg" alt="" draggable="false" />
+        </div>
+        <div>
+          <img class="slide-img" src="images/slide-3.svg" alt="" draggable="false" />
+        </div>
+      </div>
+    </div>
+
+    <div class="hotspots" role="toolbar" aria-label="상세 이미지">
+      <button type="button" class="hotspot-btn" data-popup="images/popup-sample.svg">
+        상세 보기 A
+      </button>
+      <button type="button" class="hotspot-btn" data-popup="images/slide-1.svg">
+        상세 보기 B
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="lightbox"
+    class="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-label="이미지 확대"
+  >
+    <button type="button" class="lightbox__backdrop" id="lightboxBackdrop" aria-label="닫기"></button>
+    <div class="lightbox__panel">
+      <button type="button" class="lightbox__close" id="lightboxClose" aria-label="닫기">×</button>
+      <img class="lightbox__img" id="lightboxImg" src="" alt="" />
+    </div>
+  </div>
+
+  <script src="js/swipe.js"></script>
+  <script>
+    (function () {
+      var root = document.getElementById("mySwipe");
+      var slider =
+        root &&
+        new Swipe(root, {
+          continuous: true,
+          disableScroll: true,
+          stopPropagation: false,
+        });
+
+      function reflowSwipe() {
+        if (slider && typeof slider.setup === "function") {
+          slider.setup();
+        }
+      }
+
+      window.addEventListener("resize", reflowSwipe);
+      window.addEventListener("orientationchange", function () {
+        setTimeout(reflowSwipe, 200);
+      });
+
+      var lb = document.getElementById("lightbox");
+      var lbImg = document.getElementById("lightboxImg");
+      var lbClose = document.getElementById("lightboxClose");
+      var lbBackdrop = document.getElementById("lightboxBackdrop");
+
+      function openLightbox(src) {
+        if (!src || !lb || !lbImg) return;
+        lbImg.src = src;
+        lb.classList.add("lightbox--open");
+        lb.setAttribute("aria-hidden", "false");
+      }
+
+      function closeLightbox() {
+        if (!lb || !lbImg) return;
+        lb.classList.remove("lightbox--open");
+        lb.setAttribute("aria-hidden", "true");
+        window.setTimeout(function () {
+          lbImg.removeAttribute("src");
+        }, 400);
+      }
+
+      document.querySelectorAll(".hotspot-btn[data-popup]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var src = btn.getAttribute("data-popup");
+          openLightbox(src);
+        });
+      });
+
+      if (lbClose) lbClose.addEventListener("click", closeLightbox);
+      if (lbBackdrop) lbBackdrop.addEventListener("click", closeLightbox);
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeLightbox();
+      });
+    })();
+  </script>
+</body>
+</html>

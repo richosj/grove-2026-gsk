@@ -1,0 +1,257 @@
+/* iPad Pro/Air ???? ? ???? ????? ??? ?? ?? ???? 100lvh ?? */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #050508;
+  color: #f8fafc;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  /* ??? ?? ?? ? ??? ???? ???? ??? ?? ???? ?? */
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ? ???(lvh): UI? ?? ?? ? ?? ??. ???? ???? ? ??? ??? ?? ?? ?? */
+.app-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  max-height: 100lvh;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Swipe ?? (thebird/Swipe) */
+.swipe {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.swipe-wrap {
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+}
+
+.swipe-wrap > div {
+  float: left;
+  width: 100%;
+  position: relative;
+  height: 100%;
+}
+
+.slide-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+}
+
+/* ?? ??? ?? */
+.hotspots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(24px, env(safe-area-inset-bottom, 0px) + 16px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 0 20px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hotspots > * {
+  pointer-events: auto;
+}
+
+.hotspot-btn {
+  appearance: none;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 255, 255, 0.06)
+  );
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  color: #fff;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition:
+    transform 0.28s cubic-bezier(0.34, 1.45, 0.64, 1),
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+.hotspot-btn:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.hotspot-btn:active {
+  transform: scale(0.94);
+}
+
+/* ??? ?? */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(12px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.4s ease,
+    visibility 0.4s ease;
+}
+
+.lightbox--open {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background: rgba(6, 8, 18, 0.52);
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+}
+
+.lightbox__panel {
+  position: relative;
+  z-index: 1;
+  max-width: min(94vw, 1120px);
+  max-height: min(86lvh, 920px);
+  transform: scale(0.86) translateY(28px) rotate(-1.2deg);
+  opacity: 0;
+  filter: blur(10px);
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s ease,
+    filter 0.55s ease;
+  will-change: transform, opacity, filter;
+}
+
+.lightbox--open .lightbox__panel {
+  transform: scale(1) translateY(0) rotate(0deg);
+  opacity: 1;
+  filter: blur(0);
+}
+
+.lightbox__img {
+  display: block;
+  max-width: 100%;
+  max-height: min(86lvh, 920px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.35),
+    0 32px 96px rgba(0, 0, 0, 0.45);
+}
+
+.lightbox__close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(15, 15, 22, 0.75);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: scale(0.85);
+  opacity: 0;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.45, 0.64, 1) 0.12s,
+    opacity 0.3s ease 0.1s,
+    background 0.2s ease;
+}
+
+.lightbox--open .lightbox__close {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.lightbox__close:hover {
+  background: rgba(40, 40, 55, 0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotspot-btn,
+  .lightbox,
+  .lightbox__panel,
+  .lightbox__close {
+    transition-duration: 0.01ms !important;
+  }
+
+  .lightbox__panel {
+    transform: none;
+    filter: none;
+  }
+
+  .lightbox--open .lightbox__panel {
+    transform: none;
+  }
+}
