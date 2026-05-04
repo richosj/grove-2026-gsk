@@ -22,24 +22,37 @@
     <div id="mySwipe" class="swipe">
       <div class="swipe-wrap">
         <div>
-          <img class="slide-img" src="images/slide-1.svg" alt="" draggable="false" />
+          <div class="wrapper page1">
+            <div class="slide-backdrop" aria-hidden="true">
+              <img class="slide-backdrop__img" src="images/page1.png" alt="" draggable="false" />
+            </div>
+            <img class="slide-img" src="images/page1.png" aria-label="첫 페이지" draggable="false" />
+            <button type="button" class="next-btn" id="moveToPage2" aria-label="2페이지 이동"></button>
+          </div>
         </div>
         <div>
-          <img class="slide-img" src="images/slide-2.svg" alt="" draggable="false" />
+          <div class="wrapper page2">
+            <div class="slide-backdrop" aria-hidden="true">
+              <img class="slide-backdrop__img" src="images/page2.png" alt="" draggable="false" />
+            </div>
+            <img class="slide-img" src="images/page2.png" aria-label="두 번째 페이지" draggable="false" />
+            <button type="button" class="popup-btn page2-popup1" data-popup="images/popup1.png">팝업1</button>
+            <button type="button" class="popup-btn page2-popup2" data-popup="images/popup2.png">팝업2</button>
+            <button type="button" class="popup-btn page2-popup3" data-popup="images/popup3.png">팝업3</button>
+            <button type="button" class="popup-btn page2-popup4" data-popup="images/popup4.png">팝업4</button>
+            <button type="button" class="popup-btn page2-popup5" data-popup="images/popup5.png">팝업5</button>
+          </div>
         </div>
         <div>
-          <img class="slide-img" src="images/slide-3.svg" alt="" draggable="false" />
+          <div class="wrapper end">
+            <div class="slide-backdrop" aria-hidden="true">
+              <img class="slide-backdrop__img" src="images/end.png" alt="" draggable="false" />
+            </div>
+            <img class="slide-img" src="images/end.png" aria-label="마지막 페이지" draggable="false" />
+            <button type="button" class="move-btn" id="moveToFirstPage" aria-label="첫 페이지 이동"></button>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="hotspots" role="toolbar" aria-label="상세 이미지">
-      <button type="button" class="hotspot-btn" data-popup="images/popup-sample.svg">
-        상세 보기 A
-      </button>
-      <button type="button" class="hotspot-btn" data-popup="images/slide-1.svg">
-        상세 보기 B
-      </button>
     </div>
   </div>
 
@@ -102,7 +115,7 @@
         }, 400);
       }
 
-      document.querySelectorAll(".hotspot-btn[data-popup]").forEach(function (btn) {
+      document.querySelectorAll("button[data-popup]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           var src = btn.getAttribute("data-popup");
           openLightbox(src);
