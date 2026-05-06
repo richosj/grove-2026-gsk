@@ -24,17 +24,15 @@
         <div>
           <div class="wrapper page1">
             <div class="slide-backdrop" aria-hidden="true">
-              <img class="slide-backdrop__img" src="images/page1.png" alt="" draggable="false" />
             </div>
             <img class="slide-img" src="images/page1.png" aria-label="첫 페이지" draggable="false" />
             <button type="button" id="moveToPage2" aria-label="2페이지 이동"></button>
           </div>
         </div>
         <div>
-          <div class="wrapper page2">
-            <div class="slide-backdrop" aria-hidden="true">
-              <img class="slide-backdrop__img" src="images/page2.png" alt="" draggable="false" />
-            </div>
+          <div class="wrapper page2 page2--buttons-pending">
+            <div class="slide-backdrop" aria-hidden="true"></div>
+            <img class="slide-backdrop__deco" src="images/p2-ite.png" alt="" draggable="false" />
             <img class="slide-img" src="images/page2.png" aria-label="두 번째 페이지" draggable="false" />
             <button type="button" class="popup-btn page2-popup1" data-popup="images/popup1.png"><img src="images/item1.png" alt=""></button>
             <button type="button" class="popup-btn page2-popup2" data-popup="images/popup2.png"><img src="images/item2.png" alt=""></button>
@@ -46,7 +44,7 @@
         <div>
           <div class="wrapper end">
             <div class="slide-backdrop" aria-hidden="true">
-              <img class="slide-backdrop__img" src="images/end.png" alt="" draggable="false" />
+              
             </div>
             <img class="slide-img" src="images/end.png" aria-label="마지막 페이지" draggable="false" />
             <button type="button" id="moveToFirstPage" aria-label="첫 페이지 이동"></button>
@@ -74,14 +72,44 @@
   <script>
     (function () {
       var root = document.getElementById("mySwipe");
+      function playPage2IntroIfNeeded(slideIndex) {
+        if (slideIndex !== 1) return;
+        var page2 = document.querySelector(".page2");
+        if (!page2 || !page2.classList.contains("page2--buttons-pending")) return;
+
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          page2.classList.remove("page2--buttons-pending");
+          page2.classList.add("page2--intro-done");
+          return;
+        }
+
+        page2.classList.remove("page2--buttons-pending");
+        void page2.offsetWidth;
+        page2.classList.add("page2--intro-playing");
+
+        var buttons = page2.querySelectorAll(".popup-btn");
+        var n = Math.max(1, buttons.length);
+        var staggerMs = 420;
+        var durationMs = 1000;
+        window.setTimeout(function () {
+          page2.classList.remove("page2--intro-playing");
+          page2.classList.add("page2--intro-done");
+        }, (n - 1) * staggerMs + durationMs + 80);
+      }
+
       var slider =
         root &&
         new Swipe(root, {
-          startSlide: 1,
+          startSlide: 0,
           continuous: true,
           disableScroll: true,
           stopPropagation: false,
+          callback: playPage2IntroIfNeeded,
         });
+
+      if (slider) {
+        playPage2IntroIfNeeded(slider.getPos());
+      }
 
       function reflowSwipe() {
         if (slider && typeof slider.setup === "function") {

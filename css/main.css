@@ -184,17 +184,35 @@ body {
   border: none;
   cursor: pointer;
   transform: translateX(-50%);
+  background: none;
+  border: 0;
 }
 
-/* 부드러운 페이드 + 살짝 상승만 (shake 없음) */
+/* 슬라이드 2 진입 시에만 재생 (JS가 page2--intro-playing 부여) */
 @keyframes popup-appear {
   from {
     opacity: 0;
     transform: translate(-50%, -50%) translateY(12px);
   }
-  to {
+  52% {
     opacity: 1;
     transform: translate(-50%, -50%) translateY(0);
+  }
+  62% {
+    transform: translate(-50%, -50%) translateY(0) translateX(-5px);
+  }
+  72% {
+    transform: translate(-50%, -50%) translateY(0) translateX(5px);
+  }
+  82% {
+    transform: translate(-50%, -50%) translateY(0) translateX(-3px);
+  }
+  92% {
+    transform: translate(-50%, -50%) translateY(0) translateX(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0) translateX(0);
   }
 }
 
@@ -206,10 +224,32 @@ body {
   background: transparent;
   border: none;
   cursor: pointer;
-  opacity: 0;
   transform: translate(-50%, -50%);
-  animation: popup-appear 1s cubic-bezier(0.22, 0.65, 0.36, 1) forwards;
-  animation-delay: calc(var(--pop-rank, 0) * 0.42s);
+  /* page2는 아래 상태 클래스로만 보이게 함 (기본 투명 아님: 다른 슬라이드에 팝업 추가 시 대비) */
+}
+
+/* 2페이지: 인트로 전·지연 구간 동안 항상 안 보임 */
+.page2 .popup-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.page2.page2--buttons-pending .popup-btn {
+  animation: none;
+}
+
+.page2.page2--intro-playing .popup-btn {
+  pointer-events: none;
+  /* delay 동안 기본 opacity:1로 깜빡이지 않도록: 지연 중엔 from, 종료 후엔 to 유지 */
+  animation: popup-appear 1s cubic-bezier(0.22, 0.65, 0.36, 1)
+    calc(var(--pop-rank, 0) * 0.42s) both;
+}
+
+.page2.page2--intro-done .popup-btn {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  animation: none;
+  pointer-events: auto;
 }
 
 .popup-btn img {
@@ -282,9 +322,43 @@ body {
     transform: translate(-50%, -50%) scale(1.05);
   }
 
-  .popup-btn {
-    animation: none;
+  .page2.page2--buttons-pending .popup-btn {
+    animation: none !important;
+    opacity: 0 !important;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .page2.page2--intro-playing .popup-btn,
+  .page2.page2--intro-done .popup-btn {
+    animation: none !important;
     opacity: 1;
     transform: translate(-50%, -50%);
+    pointer-events: auto;
   }
+}
+
+
+/*
+  end
+*/
+.page1 .slide-backdrop{
+  background: url(../images/p1.png) no-repeat center center / cover;
+}
+.page2 .slide-backdrop{
+  background: url(../images/p2.png) no-repeat center center / cover;
+}
+.slide-backdrop__deco{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 20%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+  z-index: 2;
+}
+.end .slide-backdrop{
+  background: #d77215;
 }
