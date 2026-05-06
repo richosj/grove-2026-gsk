@@ -35,10 +35,10 @@
             <img class="slide-backdrop__deco" src="images/p2-ite.png" alt="" draggable="false" />
             <img class="slide-img" src="images/page2.png" aria-label="두 번째 페이지" draggable="false" />
             <button type="button" class="popup-btn page2-popup1" data-popup="images/popup1.png"><img src="images/item1.png" alt=""></button>
-            <button type="button" class="popup-btn page2-popup2" data-popup="images/popup2.png"><img src="images/item2.png" alt=""></button>
-            <button type="button" class="popup-btn page2-popup3" data-popup="images/popup3.png"><img src="images/item3.png" alt=""></button>
-            <button type="button" class="popup-btn page2-popup4" data-popup="images/popup4.png"><img src="images/item4.png" alt=""></button>
-            <button type="button" class="popup-btn page2-popup5" data-popup="images/popup5.png"><img src="images/item5.png" alt=""></button>
+            <button type="button" class="popup-btn page2-popup2" data-popup="images/popup4.png"><img src="images/item2.png" alt=""></button>
+            <button type="button" class="popup-btn page2-popup3" data-popup="images/popup2.png"><img src="images/item3.png" alt=""></button>
+            <button type="button" class="popup-btn page2-popup4" data-popup="images/popup5.png"><img src="images/item4.png" alt=""></button>
+            <button type="button" class="popup-btn page2-popup5" data-popup="images/popup3.png"><img src="images/item5.png" alt=""></button>
           </div>
         </div>
         <div>
@@ -84,17 +84,27 @@
         }
 
         page2.classList.remove("page2--buttons-pending");
-        void page2.offsetWidth;
-        page2.classList.add("page2--intro-playing");
 
         var buttons = page2.querySelectorAll(".popup-btn");
         var n = Math.max(1, buttons.length);
-        var staggerMs = 420;
-        var durationMs = 1000;
+        var leadInMs = 400;
+        var shakeStaggerMs = 580;
+        var shakeMs = 880;
+
+        buttons.forEach(function (btn, idx) {
+          btn.style.setProperty("--shake-delay", leadInMs + idx * shakeStaggerMs + "ms");
+        });
+        var maxShakeDelay = leadInMs + (n - 1) * shakeStaggerMs;
+
+        void page2.offsetWidth;
+        page2.classList.add("page2--intro-shake");
         window.setTimeout(function () {
-          page2.classList.remove("page2--intro-playing");
+          page2.classList.remove("page2--intro-shake");
           page2.classList.add("page2--intro-done");
-        }, (n - 1) * staggerMs + durationMs + 80);
+          buttons.forEach(function (btn) {
+            btn.style.removeProperty("--shake-delay");
+          });
+        }, maxShakeDelay + shakeMs + 80);
       }
 
       var slider =
@@ -129,27 +139,6 @@
       document.getElementById("moveToFirstPage").addEventListener("click", function () {
         slider.slide(0);
       });
-
-      (function initPage2PopupEntrance() {
-        var page2 = document.querySelector(".page2");
-        if (!page2) return;
-        var buttons = page2.querySelectorAll(".popup-btn");
-        var n = buttons.length;
-        if (!n) return;
-
-        var ranks = [];
-        for (var i = 0; i < n; i++) ranks.push(i);
-        for (var j = n - 1; j > 0; j--) {
-          var k = Math.floor(Math.random() * (j + 1));
-          var t = ranks[j];
-          ranks[j] = ranks[k];
-          ranks[k] = t;
-        }
-
-        buttons.forEach(function (btn, idx) {
-          btn.style.setProperty("--pop-rank", String(ranks[idx]));
-        });
-      })();
 
       var lb = document.getElementById("lightbox");
       var lbImg = document.getElementById("lightboxImg");

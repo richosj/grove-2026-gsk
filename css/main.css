@@ -188,31 +188,29 @@ body {
   border: 0;
 }
 
-/* 슬라이드 2 진입 시에만 재생 (JS가 page2--intro-playing 부여) */
-@keyframes popup-appear {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) translateY(12px);
+/* 슬라이드 2: 처음부터 보임 → JS가 순차 --shake-delay 로 부드럽게 흔들기 */
+@keyframes popup-shake {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateX(0);
   }
-  52% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(0);
+  12% {
+    transform: translate(-50%, -50%) translateX(-3px);
   }
-  62% {
-    transform: translate(-50%, -50%) translateY(0) translateX(-5px);
+  28% {
+    transform: translate(-50%, -50%) translateX(3px);
   }
-  72% {
-    transform: translate(-50%, -50%) translateY(0) translateX(5px);
+  44% {
+    transform: translate(-50%, -50%) translateX(-2px);
   }
-  82% {
-    transform: translate(-50%, -50%) translateY(0) translateX(-3px);
+  60% {
+    transform: translate(-50%, -50%) translateX(2px);
   }
-  92% {
-    transform: translate(-50%, -50%) translateY(0) translateX(3px);
+  76% {
+    transform: translate(-50%, -50%) translateX(-1px);
   }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(0) translateX(0);
+  90% {
+    transform: translate(-50%, -50%) translateX(1px);
   }
 }
 
@@ -238,11 +236,11 @@ body {
   animation: none;
 }
 
-.page2.page2--intro-playing .popup-btn {
+.page2.page2--intro-shake .popup-btn {
+  opacity: 1;
   pointer-events: none;
-  /* delay 동안 기본 opacity:1로 깜빡이지 않도록: 지연 중엔 from, 종료 후엔 to 유지 */
-  animation: popup-appear 1s cubic-bezier(0.22, 0.65, 0.36, 1)
-    calc(var(--pop-rank, 0) * 0.42s) both;
+  animation: popup-shake 0.88s cubic-bezier(0.45, 0.05, 0.25, 1) var(--shake-delay, 0s)
+    both;
 }
 
 .page2.page2--intro-done .popup-btn {
@@ -329,7 +327,7 @@ body {
     pointer-events: none;
   }
 
-  .page2.page2--intro-playing .popup-btn,
+  .page2.page2--intro-shake .popup-btn,
   .page2.page2--intro-done .popup-btn {
     animation: none !important;
     opacity: 1;
